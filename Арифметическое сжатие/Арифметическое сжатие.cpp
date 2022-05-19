@@ -1,8 +1,20 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <map>
+#include <list>
 
 using namespace std;
+
+struct Node
+{
+    float freq;
+    char key;
+};
+
+bool comp(const Node* a, const Node* b)
+{
+    return a->freq > b->freq;
+}
 
 void out(std::map<char, float[2]>& mp)
 {
@@ -17,14 +29,14 @@ void out(std::map<char, float[2]>& mp)
 
 void series(float low, float high)
 {
-    float degtwo=0;
+    float degtwo = 0;
     double k; int p = 1;
     int mask;
     while (degtwo > low)
     {
         if (degtwo + pow(2, -p) < high)
         {
-            degtwo += pow(2, -p);  
+            degtwo += pow(2, -p);
         }
     }
 }
@@ -37,7 +49,7 @@ void coding(std::map<char, float[2]>& mp)
     in.get(buf);
     map<char, float[2]>::iterator it;
     it = mp.find(buf);
-    h = mp[it->first][1]; l = mp[it->first][0]; 
+    h = mp[it->first][1]; l = mp[it->first][0];
 
     cout << '[' << l << ' ' << h << ']' << endl;
     in.get(buf);
@@ -62,14 +74,13 @@ int main()
     fc >> sim;
     int quan = 0;
     while (fc)
-    {    
+    {
         asc[(int)sim]++;
         fc.get(sim);
         quan++;
     };
-    map<float, char> sort;
     map <char, float[2]> mp;
-
+    list<Node*>fsort;
     fstream fd1("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/частоты.txt", ios::out);
     float beg = 0, en = 0;
     for (int i = 0; i < 256; i++)
@@ -77,18 +88,20 @@ int main()
     {
         if (asc[i] != 0)
         {
-            sort[asc[i]] = char(i);
-            cout <<asc[i]<<' '<< sort[asc[i]] << endl;
+            Node* q = new Node;
+            q->key = (char)i;
+            q->freq = asc[i];
+            fsort.push_back(q);
         }
     }
+    fsort.sort(comp);
 
-    map<float, char>::iterator it1=sort.begin();
+    list<Node*>::iterator it1 = fsort.begin();
 
-    while (it1!=sort.end())
+    while (it1 != fsort.end())
     {
-        beg = en; en = beg + it1->first / quan;;
-        cout << en << endl;
-        mp[it1->second][0] = beg; mp[it1->second][1] = en;
+        beg = en; en = beg + (*it1)->freq / quan;
+        mp[(*it1)->key][0] = beg; mp[(*it1)->key][1] = en;
         it1++;
     }
     cout << fixed;
