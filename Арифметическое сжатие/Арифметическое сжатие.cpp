@@ -30,15 +30,34 @@ void out(std::map<char, float[2]>& mp)
 void series(float low, float high)
 {
     float degtwo = 0;
-    double k; int p = 1;
-    int mask;
-    while (degtwo > low)
+    fstream cod("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt", ios::out);
+    unsigned long int k=0; int p = 1;
+    int i = 31;
+    while (degtwo<low)
     {
-        if (degtwo + pow(2, -p) < high)
+        
+        
+        if (degtwo + (float)pow(2, -p) < high)
         {
-            degtwo += pow(2, -p);
+            degtwo += (float)pow(2, -p); k |= 1 << i;
+            cout << '1';
         }
+        else cout << '0';
+        i--; p++;
     }
+    cout << endl;
+    cout << degtwo;
+    cout << endl;
+     /*i = 31;
+    while (i >= 0)
+    {
+        if (k & 1 << i) cout << '1';
+        else cout << '0';
+        i--;
+    }
+    cout << endl;*/
+    cod << k;
+    cod.close();
 }
 
 void coding(std::map<char, float[2]>& mp)
@@ -46,11 +65,10 @@ void coding(std::map<char, float[2]>& mp)
     float h, l, hold, lold;
     fstream in("исходный текст1.txt");
     char buf;
-    in.get(buf);
     map<char, float[2]>::iterator it;
+    in.get(buf);
     it = mp.find(buf);
     h = mp[it->first][1]; l = mp[it->first][0];
-
     cout << '[' << l << ' ' << h << ']' << endl;
     in.get(buf);
     while (in)
@@ -61,8 +79,10 @@ void coding(std::map<char, float[2]>& mp)
         l = lold + (hold - lold) * mp[it->first][0];
         cout << '[' << l << ' ' << h << ']' << endl;
         in.get(buf);
+        
     }
-
+    series(l, h);
+    in.close();
 }
 int main()
 {
@@ -85,13 +105,16 @@ int main()
     float beg = 0, en = 0;
     for (int i = 0; i < 256; i++)
 
+
     {
         if (asc[i] != 0)
         {
             Node* q = new Node;
             q->key = (char)i;
             q->freq = asc[i];
+            fd1 << ' ' << (char)i <<asc[i];
             fsort.push_back(q);
+
         }
     }
     fsort.sort(comp);
@@ -109,6 +132,8 @@ int main()
     out(mp);
     fc.close();
     coding(mp);
+   int p = 1;
+   fd1.close();
 }
 
 
