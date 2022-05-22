@@ -27,11 +27,10 @@ void out(std::map<char, float[2]>& mp)
     }
 }
 
-void series(float low, float high)
+int series (double low, double high)
 {
-    float degtwo = 0;
-    fstream cod("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt", ios::out);
-    unsigned long int k=0; int p = 1;
+    double degtwo = 0;
+    unsigned int k=0; int p = 1;
     int i = 31;
     while (degtwo<low)
     {
@@ -56,33 +55,41 @@ void series(float low, float high)
         i--;
     }
     cout << endl;*/
-    cod << k;
-    cod.close();
+    return k;
+    
 }
 
 void coding(std::map<char, float[2]>& mp)
 {
-    float h, l, hold, lold;
+    double h, l, hold, lold;
     fstream in("исходный текст1.txt");
+    fstream cod("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt", ios::out);
     char buf;
     map<char, float[2]>::iterator it;
-    in.get(buf);
-    it = mp.find(buf);
-    h = mp[it->first][1]; l = mp[it->first][0];
-    cout << '[' << l << ' ' << h << ']' << endl;
-    in.get(buf);
     while (in)
     {
-        it = mp.find(buf);
-        hold = h; lold = l;
-        h = lold + (hold - lold) * mp[it->first][1];
-        l = lold + (hold - lold) * mp[it->first][0];
-        cout << '[' << l << ' ' << h << ']' << endl;
+        int k = 0;
         in.get(buf);
-        
+        it = mp.find(buf);
+        h = mp[it->first][1]; l = mp[it->first][0];
+        cout << '[' << l << ' ' << h << ']' << endl;
+        cout << buf << endl;
+        k++;
+        while (in&&k!=5)
+        {   in.get(buf); cout << buf << endl;
+            it = mp.find(buf);
+            hold = h; lold = l;
+            h = lold + (hold - lold) * mp[it->first][1];
+            l = lold + (hold - lold) * mp[it->first][0];
+            cout << '[' << l << ' ' << h << ']' << endl;
+            k++;
+        }
+      unsigned int sim= series(l, h);
+      cout << sim << endl;
+      cod << sim;
     }
-    series(l, h);
     in.close();
+    cod.close();
 }
 int main()
 {
@@ -128,12 +135,22 @@ int main()
         it1++;
     }
     cout << fixed;
-    cout.precision(8);
+    cout.precision(16);
     out(mp);
     fc.close();
     coding(mp);
    int p = 1;
    fd1.close();
+   fstream cod("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt", ios::binary);
+   int num;
+   cod >> num; cod >> num; cod >> num;
+   cout << endl;
+   for (int i = 31; i >= 0; i--)
+   {
+       if (num & 1 << i) cout << '1';
+       else cout << '0';
+   }
+   
 }
 
 

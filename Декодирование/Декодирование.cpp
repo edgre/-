@@ -27,49 +27,55 @@ void out(std::map<char, float[2]>& mp)
     }
 }
 
-float section()
+double section(int num)
 {
-    ifstream dec("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt", ios::binary);
-    int i = 31;
-    int num;
-    dec >> num;
-    int p = 1;
-    float q=0;
-    while (i >= 0)
-    {
-        if (num & 1 << i) {
-            q = q + pow(2, -p); cout << '1';
+        int i = 31;
+        int p = 1;
+        double q = 0;
+        while (i >= 0)
+        {
+            if (num & 1 << i) {
+                q = q + pow(2, -p); cout << '1';
+            }
+            else cout << '0';
+            p++; i--;
         }
-        else cout << '0';
-        p++; i--;
-    }
-    cout << endl;
+        cout << endl;
+        cout << q << endl;
+
     return q;
 }
 
-void decod (float code, map<char, float[2]>& q)
+void decod (double code, int &kol, map<char, float[2]>& q, ofstream& out)
 {
-    float rangeh, rangel;
+    
+    double rangeh, rangel;
     map<char, float[2]>::iterator it;
-    int i = 0;
-    while (i != 6)
+    int chank = 5;
+    while (chank&&kol)
     {
         it = q.begin();
         while (code<=q[it->first][0] || code>q[it->first][1])
             it++;
-        cout << it->first;
+        cout << code << '-';
+        out << it->first;
+        cout << it->first<<endl;
         rangel = q[it->first][0];
         rangeh = q[it->first][1];
         code = (code - rangel) / (rangeh - rangel);
-        i++;
+        
+        chank--; kol--;
     }
+    cout << endl;
+    if (!kol) cout << 'g';
+    
 }
 
 int main()
 {
     fstream fc("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/частоты.txt");
     list<Node*> sort;
-    char key; int size;
+    char key; float size;
     fc.seekg(1, ios::cur);
     fc.get(key);
     fc >> size;
@@ -99,10 +105,22 @@ int main()
         it1++;
     }
     cout << fixed;
-    cout.precision(8);
+    cout.precision(16);
     out(mp);
-    float fromint = section();
-    cout << fromint << endl;
-    decod(fromint, mp);
+    ifstream dec("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt");
+    ofstream out("результат.txt");
+    unsigned int num;
+    int weight2 = weight1;
+    double fromint;
+   dec >> num;
+   cout << num << endl;
+   while (dec) {
+       fromint = section(num);
+       decod(fromint, weight2, mp, out);
+       dec >> num;
+       cout << num << endl;
+   };
+   dec >> num; 
+   cout << num;
 
 }

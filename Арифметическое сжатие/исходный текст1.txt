@@ -1,1 +1,1 @@
-bbbcaa
+Blockchains are distributed systems that provide a secure and trustworthy service via a group of parties that do not have to trust each other. 
