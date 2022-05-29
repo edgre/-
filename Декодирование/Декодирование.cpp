@@ -2,6 +2,7 @@
 #include <fstream>
 #include <map>
 #include <list>
+#include <locale.h>
 
 using namespace std;
 
@@ -27,10 +28,9 @@ void out(std::map<char, float[2]>& mp)
     }
 }
 
-double section(int num)
+double section(int num, int& p)
 {
-        int i = 31;
-        int p = 1;
+        int i = 7;
         double q = 0;
         while (i >= 0)
         {
@@ -41,7 +41,7 @@ double section(int num)
             p++; i--;
         }
         cout << endl;
-        cout << q << endl;
+        
 
     return q;
 }
@@ -63,23 +63,45 @@ void decod (double code, int &kol, map<char, float[2]>& q, ofstream& out)
         rangel = q[it->first][0];
         rangeh = q[it->first][1];
         code = (code - rangel) / (rangeh - rangel);
-        
         chank--; kol--;
     }
-    cout << endl;
-    if (!kol) cout << 'g';
+    cout << chank << endl;
     
+    cout << endl;
+    
+    
+}
+
+bool proof()
+{
+    fstream fc("результат.txt");
+    fstream fs("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/Арифметическое сжатие/исходный текст1.txt");
+    char sim, sim1;
+    fc.get(sim); fs.get(sim1);
+    while (fs || fc)
+    {   cout << sim << ' ' << sim1 << endl;
+        if (sim != sim1) return false;
+        fc.get(sim); fs.get(sim1);
+        
+    }
+    return true;
+}
+
+void weight(float weight1, float weight2)
+{
+    cout <<"файл сжат в "<< weight1 / weight2<<" раз";
 }
 
 int main()
 {
+    setlocale(LC_ALL, "Russian");
     fstream fc("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/частоты.txt");
     list<Node*> sort;
     char key; float size;
     fc.seekg(1, ios::cur);
     fc.get(key);
     fc >> size;
-    int weight1 = size;
+    float weight1 = size;
     cout << weight1 << endl;
     list<Node*> fsort;
     map <char, float[2]>mp;
@@ -107,20 +129,42 @@ int main()
     cout << fixed;
     cout.precision(16);
     out(mp);
-    ifstream dec("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt");
+    ifstream dec("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt", ios::binary);
     ofstream out("результат.txt");
-    unsigned int num;
+    char num;
     int weight2 = weight1;
-    double fromint;
-   dec >> num;
-   cout << num << endl;
-   while (dec) {
-       fromint = section(num);
+    float weight3 = 0;
+    int kolvo = 5;
+    char bu;
+    dec.get(num);
+    cout << num << endl;
+    while (dec) {
+        double fromint = 0;
+        int p = 1;
+        while (kolvo && dec) 
+        {
+            if ((int)num == 13)
+            {
+                
+                dec.get(bu);
+                if ((int)bu == 10) num = bu;
+                else dec.seekg(-1, ios::cur);
+            }
+            cout << (int)num << endl;
+            fromint += section(num, p);
+            cout << fromint << endl;
+            dec.get(num);
+            weight3++;
+            kolvo--;
+        }
        decod(fromint, weight2, mp, out);
-       dec >> num;
-       cout << num << endl;
-   };
-   dec >> num; 
-   cout << num;
+       kolvo = 5;
 
+   };
+    _fcloseall();
+    cout << endl;
+    if (proof()) cout << "совпали" << endl;
+    else cout << "не совпали";
+    cout << endl;
+    weight(weight1, weight3);
 }
