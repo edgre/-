@@ -52,11 +52,11 @@ void decod (double code, int &kol, map<char, float[2]>& q, ofstream& out)
     double rangeh, rangel;
     map<char, float[2]>::iterator it;
     int chank = 5;
-    while (chank&&kol)
+    it = q.begin();
+    while (code <= q[it->first][0] || code > q[it->first][1])
+        it++;
+    while (it->first!='^')
     {
-        it = q.begin();
-        while (code<=q[it->first][0] || code>q[it->first][1])
-            it++;
         cout << code << '-';
         out << it->first;
         cout << it->first<<endl;
@@ -64,6 +64,9 @@ void decod (double code, int &kol, map<char, float[2]>& q, ofstream& out)
         rangeh = q[it->first][1];
         code = (code - rangel) / (rangeh - rangel);
         chank--; kol--;
+        it = q.begin();
+        while (code<=q[it->first][0] || code>q[it->first][1])
+        it++;
     }
     cout << chank << endl;
     
@@ -134,7 +137,7 @@ int main()
     char num;
     int weight2 = weight1;
     float weight3 = 0;
-    int kolvo = 5;
+    int kolvo = 4;
     char bu;
     dec.get(num);
     cout << num << endl;
@@ -158,7 +161,7 @@ int main()
             kolvo--;
         }
        decod(fromint, weight2, mp, out);
-       kolvo = 5;
+       kolvo = 4;
 
    };
     _fcloseall();
