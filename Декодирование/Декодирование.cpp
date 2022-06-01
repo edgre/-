@@ -169,5 +169,7 @@ int main()
     if (proof()) cout << "совпали" << endl;
     else cout << "не совпали";
     cout << endl;
+    float kos = ceil(weight1 / (float)2);
+    weight1 -= kos;
     weight(weight1, weight3);
 }

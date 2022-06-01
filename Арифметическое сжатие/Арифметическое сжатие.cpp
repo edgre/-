@@ -178,7 +178,7 @@ int main()
     cout << fixed;
     cout.precision(16);
     cout << quan << endl;
-    float kos = ceil(quan / (float)4);
+    float kos = ceil(quan / (float)2);
     cout <<"kos="<< kos << endl;
     quan = quan + kos;
     map <char, float[2]> mp;
