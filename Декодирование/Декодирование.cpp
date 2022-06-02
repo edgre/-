@@ -35,44 +35,41 @@ double section(int num, int& p)
         while (i >= 0)
         {
             if (num & 1 << i) {
-                q = q + pow(2, -p); cout << '1';
+                q = q + pow(2, -p); /*cout << '1';*/
             }
-            else cout << '0';
+            /*else cout << '0';*/
             p++; i--;
         }
-        cout << endl;
+        /*cout << endl;*/
         
 
     return q;
 }
 
-void decod (double code, int &kol, map<char, float[2]>& q, ofstream& out)
+void decod (double code, map<char, float[2]>& q, ofstream& out, ifstream& fc1)
 {
-    
     double rangeh, rangel;
     map<char, float[2]>::iterator it;
-    int chank = 5;
-    it = q.begin();
-    while (code <= q[it->first][0] || code > q[it->first][1])
-        it++;
-    while (it->first!='^')
+    int chank;
+    fc1 >> chank;
+    /*cout << "chank=" << chank << endl;*/
+    int kol = 0;
+
+    while (kol != chank)
     {
-        cout << code << '-';
+        it = q.begin();
+        while (code <= q[it->first][0] || code > q[it->first][1])
+            it++;
+        /*cout << code << '-';*/
         out << it->first;
-        cout << it->first<<endl;
+        /*cout << it->first << endl;*/
         rangel = q[it->first][0];
         rangeh = q[it->first][1];
         code = (code - rangel) / (rangeh - rangel);
-        chank--; kol--;
-        it = q.begin();
-        while (code<=q[it->first][0] || code>q[it->first][1])
-        it++;
+        kol++;
     }
-    cout << chank << endl;
-    
-    cout << endl;
-    
-    
+
+    /*cout << endl;*/
 }
 
 bool proof()
@@ -82,11 +79,16 @@ bool proof()
     char sim, sim1;
     fc.get(sim); fs.get(sim1);
     while (fs || fc)
-    {   cout << sim << ' ' << sim1 << endl;
-        if (sim != sim1) return false;
+    {   /*cout << sim << ' ' << sim1 << endl;*/
+        if (sim != sim1) 
+        {
+            fs.close(); return false;
+        }
         fc.get(sim); fs.get(sim1);
-        
+
+
     }
+    fs.close();
     return true;
 }
 
@@ -105,7 +107,7 @@ int main()
     fc.get(key);
     fc >> size;
     float weight1 = size;
-    cout << weight1 << endl;
+    /*cout << weight1 << endl;*/
     list<Node*> fsort;
     map <char, float[2]>mp;
     // считываем символы исходного текста и их частоты
@@ -119,7 +121,7 @@ int main()
         fc >> size;
         if (fc) { weight1 += size; };
     }
-    cout << weight1 << endl;
+    /*cout << weight1 << endl;*/
     fsort.sort(comp);
     list<Node*>::iterator it1 = fsort.begin();
     float beg = 0, en = 0;
@@ -131,16 +133,16 @@ int main()
     }
     cout << fixed;
     cout.precision(16);
-    out(mp);
+    /*out(mp);*/
     ifstream dec("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/код.txt", ios::binary);
+    ifstream fc1("C:/Users/Дима и Егор/Source/repos/Арифметическое сжатие/чанки.txt");
     ofstream out("результат.txt");
     char num;
-    int weight2 = weight1;
     float weight3 = 0;
     int kolvo = 4;
     char bu;
     dec.get(num);
-    cout << num << endl;
+    /*cout << num << endl;*/
     while (dec) {
         double fromint = 0;
         int p = 1;
@@ -153,23 +155,23 @@ int main()
                 if ((int)bu == 10) num = bu;
                 else dec.seekg(-1, ios::cur);
             }
-            cout << (int)num << endl;
+            /*cout << (int)num << endl;*/
             fromint += section(num, p);
-            cout << fromint << endl;
+            /*cout << fromint << endl;*/
             dec.get(num);
             weight3++;
             kolvo--;
         }
-       decod(fromint, weight2, mp, out);
+       decod(fromint,mp, out, fc1);
        kolvo = 4;
 
    };
-    _fcloseall();
-    cout << endl;
+    out.close();
+    fc.close();
+    fc1.close();
+    /*cout << endl;*/
     if (proof()) cout << "совпали" << endl;
     else cout << "не совпали";
     cout << endl;
-    float kos = ceil(weight1 / (float)2);
-    weight1 -= kos;
     weight(weight1, weight3);
 }
